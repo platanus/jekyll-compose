@@ -1,13 +1,13 @@
 require 'helper'
 require 'jekyll/commands/draft'
 
-class TestDraftCommand < Test::Unit::TestCase
+class TestDraftCommand < Minitest::Test
 
   context 'when no flags are given' do
     setup do
       @name = 'A test post'
       @args = [@name]
-      @drafts_dir = '_drafts'
+      @drafts_dir = test_dir('_drafts')
       @path = File.join(@drafts_dir, 'a-test-post.markdown')
       stub(Jekyll).configuration { Jekyll::Configuration::DEFAULTS }
       @site = Site.new(Jekyll.configuration)
@@ -15,7 +15,7 @@ class TestDraftCommand < Test::Unit::TestCase
     end
 
     teardown do
-      FileUtils.rm_r @drafts_dir
+      FileUtils.rm_r @drafts_dir if File.directory?(@drafts_dir)
     end
 
     should 'create a new draft post' do
@@ -35,7 +35,7 @@ class TestDraftCommand < Test::Unit::TestCase
     setup do
       @name = 'An existing draft'
       @args = [@name]
-      @drafts_dir = '_drafts'
+      @drafts_dir = test_dir('_drafts')
       @path = File.join(@drafts_dir, 'an-existing-draft.markdown')
       stub(Jekyll).configuration { Jekyll::Configuration::DEFAULTS }
       @site = Site.new(Jekyll.configuration)
@@ -44,11 +44,11 @@ class TestDraftCommand < Test::Unit::TestCase
     end
 
     teardown do
-      FileUtils.rm_r @drafts_dir
+      FileUtils.rm_r @drafts_dir if File.directory?(@drafts_dir)
     end
 
     should 'raise an ArgumentError' do
-      exception = assert_raise ArgumentError do
+      exception = assert_raises ArgumentError do
         capture_stdout { Jekyll::Commands::Draft.process(@args) }
       end
       assert_equal "A draft already exists at ./#{@path}", exception.message
@@ -58,7 +58,7 @@ class TestDraftCommand < Test::Unit::TestCase
       capture_stdout { Jekyll::Commands::Draft.process(@args, { "force" => true  }) }
       assert File.readlines(@path).grep(/layout: post/).any?
     end
-      
+
   end
 
   context 'when no args are given' do
@@ -67,7 +67,7 @@ class TestDraftCommand < Test::Unit::TestCase
     end
 
     should 'raise an ArgumentError' do
-      exception = assert_raise ArgumentError do
+      exception = assert_raises ArgumentError do
         Jekyll::Commands::Draft.process(@empty_args)
       end
       assert_equal 'You must specify a name.', exception.message

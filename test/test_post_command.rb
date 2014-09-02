@@ -1,7 +1,7 @@
 require 'helper'
 require 'jekyll/commands/post'
 
-class TestPostCommand < Test::Unit::TestCase
+class TestPostCommand < Minitest::Test
 
   context 'when no flags are given' do
     setup do
@@ -44,7 +44,7 @@ class TestPostCommand < Test::Unit::TestCase
     end
 
     should 'raise an ArgumentError' do
-      exception = assert_raise ArgumentError do
+      exception = assert_raises ArgumentError do
         capture_stdout { Jekyll::Commands::Post.process(@args) }
       end
       assert_equal "A post already exists at ./#{@path}", exception.message
@@ -54,7 +54,7 @@ class TestPostCommand < Test::Unit::TestCase
       capture_stdout { Jekyll::Commands::Post.process(@args, { "force" => true  }) }
       assert File.readlines(@path).grep(/layout: post/).any?
     end
-      
+
   end
 
   context 'when no args are given' do
@@ -63,7 +63,7 @@ class TestPostCommand < Test::Unit::TestCase
     end
 
     should 'raise an ArgumentError' do
-      exception = assert_raise ArgumentError do
+      exception = assert_raises ArgumentError do
         Jekyll::Commands::Post.process(@empty_args)
       end
       assert_equal 'You must specify a name.', exception.message

@@ -2,7 +2,7 @@ require 'helper'
 require 'date'
 require 'jekyll/commands/publish'
 
-class TestPublishCommand < Test::Unit::TestCase
+class TestPublishCommand < Minitest::Test
 
   context 'when no flags are given' do
     setup do
@@ -42,7 +42,7 @@ class TestPublishCommand < Test::Unit::TestCase
     end
 
     should 'raise an ArgumentError' do
-      exception = assert_raise ArgumentError do
+      exception = assert_raises ArgumentError do
         Jekyll::Commands::Publish.process(@empty_args)
       end
       assert_equal 'You must specify a name.', exception.message
