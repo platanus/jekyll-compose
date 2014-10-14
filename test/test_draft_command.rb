@@ -9,8 +9,7 @@ class TestDraftCommand < Minitest::Test
       @args = [@name]
       @drafts_dir = test_dir('_drafts')
       @path = File.join(@drafts_dir, 'a-test-post.markdown')
-      stub(Jekyll).configuration { Jekyll::Configuration::DEFAULTS }
-      @site = Site.new(Jekyll.configuration)
+      @site = fixture_site
       FileUtils.mkdir @drafts_dir
     end
 
@@ -37,8 +36,7 @@ class TestDraftCommand < Minitest::Test
       @args = [@name]
       @drafts_dir = test_dir('_drafts')
       @path = File.join(@drafts_dir, 'an-existing-draft.markdown')
-      stub(Jekyll).configuration { Jekyll::Configuration::DEFAULTS }
-      @site = Site.new(Jekyll.configuration)
+      @site = fixture_site
       FileUtils.mkdir @drafts_dir
       FileUtils.touch @path
     end
